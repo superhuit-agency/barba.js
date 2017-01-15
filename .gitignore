@@ -1,0 +1,13 @@
+# Node + npm generic
+node_modules
+logs
+*.log
+npm-debug.log*
+
+# Mac OSX
+.DS_Store
+
+# Specific File project
+coverage
+reports
+docs
