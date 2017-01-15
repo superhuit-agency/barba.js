@@ -10,7 +10,7 @@
   ],
   "main": "dist/barba.js",
   "scripts": {
-    "test": "npm run http-server -s && npm run unit && npm run e2e && npm run coveralls",
+    "test": "npm run http-server -s && npm run unit && npm run e2e",
     "e2e": "./node_modules/.bin/nightwatch -f '*.e2e.js'",
     "e2e-sauce": "./node_modules/.bin/nightwatch -f '*.e2e.js' -c nightwatch.conf.sauce.js -e chrome_osx,ff_osx,safari_osx,ie_10,ie_11",
     "unit": "jest",
