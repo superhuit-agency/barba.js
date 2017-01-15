@@ -1,38 +1,41 @@
 module.exports = {
-  "src_folders": [ "e2e" ],
-  "output_folder": "./reports",
-  "selenium": {
-    "start_process": true,
-    "server_path": "./node_modules/nightwatch/bin/selenium.jar",
-    "host": "127.0.0.1",
-    "port": 4444,
-    "cli_args": {
-      "webdriver.chrome.driver" : "./node_modules/nightwatch/bin/chromedriver"
+  'src_folders': [ 'e2e' ],
+  'output_folder': './reports',
+  'custom_commands_path' : 'e2e/custom_commands',
+  'selenium': {
+    'start_process': true,
+    'server_path': './node_modules/nightwatch/bin/selenium.jar',
+    'host': '127.0.0.1',
+    'port': 4444,
+    'cli_args': {
+      'webdriver.chrome.driver' : './node_modules/nightwatch/bin/chromedriver'
     }
   },
-  "test_settings": {
-    "default": {
-      "screenshots": {
-        "enabled": false
+  'test_settings': {
+    'default': {
+      'screenshots': {
+        'enabled': false
       },
-      "globals": {
-        "waitForConditionTimeout": 5000
+      'globals': {
+        'waitForConditionTimeout': 5000
       },
-      "desiredCapabilities": {
-        "browserName": "chrome"
+      'desiredCapabilities': {
+        'browserName': 'chrome',
+        'acceptSslCerts': true,
+        'javascriptEnabled': true,
       },
-      "globals": {
-        "baseUrl": "http://localhost:9966"
+      'globals': {
+        'baseUrl': 'http://localhost:9966'
       }
     },
-    "chrome": {
-      "desiredCapabilities": {
-        "browserName": "chrome",
-        "javascriptEnabled": true
+    'chrome': {
+      'desiredCapabilities': {
+        'browserName': 'chrome',
+        'javascriptEnabled': true
       }
-    },
+    }
   },
-}
+};
 
 
 /**

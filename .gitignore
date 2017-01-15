@@ -3,6 +3,7 @@ node_modules
 logs
 *.log
 npm-debug.log*
+.env
 
 # Mac OSX
 .DS_Store
@@ -11,3 +12,4 @@ npm-debug.log*
 coverage
 reports
 docs
+

@@ -1,3 +1,5 @@
+// var SauceLabs = require("saucelabs");
+
 module.exports = {
   'Basic test' : function (browser) {
     browser
@@ -18,5 +20,13 @@ module.exports = {
     //   .assert.cssClassPresent('body', 'about');
 
     browser.end();
+  },
+
+  afterEach: function(client, done) {
+    client.customSauceEnd();
+
+    setTimeout(function() {
+      done()
+    }, 1000);
   }
 };
