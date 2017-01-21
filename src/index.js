@@ -1,4 +1,9 @@
 import 'whatwg-fetch';
+import Promise from 'promise-polyfill';
+
+if (!window.Promise) {
+  window.Promise = Promise;
+}
 
 import BaseTransition from './transition/baseTransition';
 import BaseView from './view/baseView';
@@ -9,13 +14,6 @@ import Pjax from './pjax/pjax';
 import Prefetch from './pjax/prefetch';
 import Utils from './utils/utils';
 
-//Promise polyfill https://github.com/taylorhakes/promise-polyfill
-
-// if (typeof Promise !== 'function') {
-//   window.Promise = require('promise-polyfill');
-// }
-//
-// Fetch polyfill
 
 module.exports = {
   version: VERSION,

@@ -1,5 +1,10 @@
 module.exports = {
   'Basic test' : function (browser) {
+
+    /**
+     * TODO: test Promise and fetch/Headers
+     */
+
     browser
       .url(browser.globals.baseUrl + '/e2e/grid/index.html')
       .expect.element('#barba-wrapper').to.have.attribute('aria-live').equals('polite');
