@@ -12,6 +12,7 @@ export default {
    * @return {String} currentUrl
    */
   getCurrentUrl() {
+    // Todo add hash
     return window.location.protocol + '//' +
            window.location.host +
            window.location.pathname +
@@ -31,32 +32,28 @@ export default {
   },
 
   /**
-   * Time in millisecond after the xhr request goes in timeout
+   * Time in millisecond after the ajax request goes in timeout
    *
    * @memberOf Barba.Utils
    * @type {Number}
    * @default
    */
-  xhrTimeout: 5000,
+  requestTimeout: 5000,
 
   /**
-   * Start an XMLHttpRequest() and return a Promise
+   * Start a fetch request
    *
    * @memberOf Barba.Utils
    * @param  {String} url
    * @return {Promise}
    */
-  xhr(url) {
-    // const deferred = this.deferred();
-    // let timeout;
-
-    // new Promise((resolve, reject) => {
-    //   timeout = window.setTimeout(() => {
-    //     reject(new Error('xhr: Timeout exceeded'));
-    //   }, this.xhrTimeout);
-    // });
-
+  request(url) {
+    // TODO implement timeout!
     const dfd = this.deferred();
+
+    const timeout = window.setTimeout(() => {
+      dfd.reject(new Error('timeout!'));
+    }, this.requestTimeout);
 
     const headers = new Headers();
     headers.append('x-barba', 'yes');
@@ -66,6 +63,8 @@ export default {
       headers,
       cache: 'default',
     }).then(res => {
+      window.clearTimeout(timeout);
+
       if (res.status >= 200 && res.status < 300){
         return dfd.resolve(res.text());
       }
@@ -73,36 +72,11 @@ export default {
       const err = new Error(res.statusText || res.status);
       return dfd.reject(err);
     }).catch(err => {
+      window.clearTimeout(timeout);
       dfd.reject(err);
     });
 
-
     return dfd.promise;
-
-    // var deferred = this.deferred();
-    // var req = new XMLHttpRequest();
-
-    // req.onreadystatechange = () => {
-    //   if (req.readyState === 4) {
-    //     // TODO CHECK THIS
-    //     if (req.status === 200) {
-    //       return deferred.resolve(req.responseText);
-    //     } else {
-    //       return deferred.reject(new Error('xhr: HTTP code is not 200'));
-    //     }
-    //   }
-    // };
-
-    // req.ontimeout = () => {
-    //   return deferred.reject(new Error('xhr: Timeout exceeded'));
-    // };
-
-    // req.open('GET', url);
-    // req.timeout = this.xhrTimeout;
-    // req.setRequestHeader('x-barba', 'yes');
-    // req.send();
-
-    // return deferred.promise;
   },
 
   /**
@@ -133,8 +107,8 @@ export default {
    * @return {Int} port
    */
   getPort(p) {
-    var port = typeof p !== 'undefined' ? p : window.location.port;
-    var protocol = window.location.protocol;
+    const port = typeof p !== 'undefined' ? p : window.location.port;
+    const protocol = window.location.protocol;
 
     if (port != '')
       return parseInt(port);

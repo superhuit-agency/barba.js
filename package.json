@@ -10,8 +10,8 @@
   ],
   "main": "dist/barba.js",
   "scripts": {
-    "test": "npm run http-server -s && npm run unit && npm run e2e",
-    "e2e": "./node_modules/.bin/nightwatch -f '*.e2e.js'",
+    "test": "npm run build && npm run unit && npm run e2e",
+    "e2e": "npm run http-server -s && ./node_modules/.bin/nightwatch -f '*.e2e.js'",
     "e2e-sauce": "./node_modules/.bin/nightwatch -f '*.e2e.js' -c nightwatch.conf.sauce.js -e chrome_osx,ff_osx,safari_osx,ie_10,ie_11",
     "unit": "jest",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
@@ -62,5 +62,10 @@
     "globals": {
       "VERSION": "version-string"
     }
+  },
+  "dependencies": {
+    "babel-core": "^6.22.1",
+    "eslint": "^3.14.0",
+    "webpack": "^2.2.0"
   }
 }

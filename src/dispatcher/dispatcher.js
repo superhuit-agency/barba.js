@@ -26,6 +26,13 @@ export default {
     this.events[e].push(f);
   },
 
+  /**
+   * Bind a callback to an event that fires just once.
+   *
+   * @memberOf Barba.Dispatcher
+   * @param  {String} eventName
+   * @param  {Function} functio
+   */
   once(e, f) {
     let self = this;
 
@@ -58,12 +65,12 @@ export default {
    * @param  {String} eventName
    * @param  {...*} args
    */
-  trigger(e) {//e, ...args
+  trigger(e, ...args) {
     if (e in this.events === false)
       return;
 
-    for(let i = 0; i < this.events[e].length; i++){
-      this.events[e][i].apply(this, Array.prototype.slice.call(arguments, 1));
-    }
+    this.events[e].forEach(event => {
+      event.apply(this, args);
+    });
   }
 };

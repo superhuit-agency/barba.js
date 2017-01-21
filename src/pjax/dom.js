@@ -36,7 +36,7 @@ export default {
    * Full HTML String of the current page.
    * By default is the innerHTML of the initial loaded page.
    *
-   * Each time a new page is loaded, the value is the response of the xhr call.
+   * Each time a new page is loaded, the value is the response of the ajax call.
    *
    * @memberOf Barba.Pjax.Dom
    * @type {String}
@@ -44,20 +44,20 @@ export default {
   currentHTML: document.documentElement.innerHTML,
 
   /**
-   * Parse the responseText obtained from the xhr call
+   * Parse the responseText obtained from the ajax call
    *
    * @memberOf Barba.Pjax.Dom
    * @private
    * @param  {String} responseText
    * @return {HTMLElement}
    */
-  parseResponse: function(responseText) {
+  parseResponse(responseText) {
     this.currentHTML = responseText;
 
-    var wrapper = document.createElement('div');
-    wrapper.innerHTML = responseText;
+    const wrapper = document.createElement('div');
+          wrapper.innerHTML = responseText;
 
-    var titleEl = wrapper.querySelector('title');
+    const titleEl = wrapper.querySelector('title');
 
     if (titleEl)
       document.title = titleEl.textContent;
@@ -71,8 +71,8 @@ export default {
    * @memberOf Barba.Pjax.Dom
    * @return {HTMLElement} element
    */
-  getWrapper: function() {
-    var wrapper = document.getElementById(this.wrapperId);
+  getWrapper() {
+    const wrapper = document.getElementById(this.wrapperId);
 
     if (!wrapper)
       throw new Error('Barba.js: wrapper not found!');
@@ -89,18 +89,14 @@ export default {
    * @param  {HTMLElement} element
    * @return {HTMLElement}
    */
-  getContainer: function(element) {
+  getContainer(element) {
     if (!element)
       element = document.body;
 
     if (!element)
       throw new Error('Barba.js: DOM not ready!');
 
-    var container = this.parseContainer(element);
-
-    // wtf?
-    // if (container && container.jquery)
-    //   container = container[0];
+    const container = this.parseContainer(element);
 
     if (!container)
       throw new Error('Barba.js: no container found');
@@ -116,13 +112,7 @@ export default {
    * @param  {HTMLElement} element
    * @return {String}
    */
-  getNamespace: function(element) {
-    // if (element && element.dataset) {
-    //   return element.dataset[this.dataNamespace];
-    // } else if (element) {
-    //   return element.getAttribute('data-' + this.dataNamespace);
-    // }
-
+  getNamespace(element) {
     if (!element) {
       return null;
     }
@@ -137,10 +127,10 @@ export default {
    * @private
    * @param  {HTMLElement} element
    */
-  putContainer: function(element) {
+  putContainer(element) {
     element.style.visibility = 'hidden';
 
-    var wrapper = this.getWrapper();
+    const wrapper = this.getWrapper();
     wrapper.appendChild(element);
   },
 
@@ -152,7 +142,7 @@ export default {
    * @param  {HTMLElement} element
    * @return {HTMLElement} element
    */
-  parseContainer: function(element) {
-    return element.querySelector('.' + this.containerClass);
+  parseContainer(element) {
+    return element.querySelector(`.${this.containerClass}`);
   }
 };

@@ -24,8 +24,6 @@ export default class BaseTransition {
    * @return {Promise}
    */
   init(oldContainer, newContainer) {
-    var _this = this;
-
     this.oldContainer = oldContainer;
     this._newContainerPromise = newContainer;
 
@@ -35,9 +33,9 @@ export default class BaseTransition {
 
     this.start();
 
-    this._newContainerPromise.then(function(newContainer) {
-      _this.newContainer = newContainer;
-      _this.newContainerReady.resolve();
+    this._newContainerPromise.then(newContainer => {
+      this.newContainer = newContainer;
+      this.newContainerReady.resolve();
     });
 
     return this.deferred.promise;

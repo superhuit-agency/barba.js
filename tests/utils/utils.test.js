@@ -52,8 +52,8 @@ it('can clean link', () => {
   }
 });
 
-it('has xhrTimeout', () => {
-  expect(utils.xhrTimeout).toBe(5000);
+it('has requestTimeout', () => {
+  expect(utils.requestTimeout).toBe(5000);
 });
 
 it('can fetch', () => {
@@ -77,21 +77,33 @@ it('can fetch', () => {
     throws: 'error'
   });
 
-  utils.xhr('success').then(text => {
+  utils.request('success').then(text => {
     expect(text).toBe('a string');
   });
 
-  utils.xhr('partial').then(text => {
+  utils.request('partial').then(text => {
     expect(text).toBe('a partial');
   });
 
-  utils.xhr('notfound').catch(res => {
+  utils.request('notfound').catch(res => {
     expect(res).toBeTruthy();
   });
 
-  utils.xhr('error').catch(res => {
+  utils.request('error').catch(res => {
     expect(res).toBeTruthy();
   });
+
+  // utils.requestTimeout = 0;
+
+  // utils.request('success').then(test => {
+  //   expect(1).toBe(2);
+  // }).catch(err => {
+  //   console.log(err);
+  //   expect(5).toBe(10);
+  //   // expect(err).toBe('a string');
+  //   // expect(err).toThrowError('Barba.js: DOM not ready!')
+  // });
+
 });
 
 it('has deferred', () => {

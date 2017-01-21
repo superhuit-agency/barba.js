@@ -22,14 +22,8 @@ export default {
    * @param {String} namespace
    * @private
    */
-  add: function(url, namespace) {
-    if (!namespace)
-      namespace = undefined;
-
-    this.history.push({
-      url: url,
-      namespace: namespace
-    });
+  add(url, namespace = undefined) {
+    this.history.push({ url, namespace });
   },
 
   /**
@@ -38,7 +32,7 @@ export default {
    * @memberOf Barba.HistoryManager
    * @return {Object}
    */
-  currentStatus: function() {
+  currentStatus() {
     return this.history[this.history.length - 1];
   },
 
@@ -48,8 +42,8 @@ export default {
    * @memberOf Barba.HistoryManager
    * @return {Object}
    */
-  prevStatus: function() {
-    var history = this.history;
+  prevStatus() {
+    const history = this.history;
 
     if (history.length < 2)
       return null;

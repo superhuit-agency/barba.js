@@ -50,7 +50,7 @@ export default {
    *
    * @memberOf Barba.Pjax
    */
-  start: function() {
+  start() {
     this.init();
   },
 
@@ -60,9 +60,9 @@ export default {
    * @memberOf Barba.Pjax
    * @private
    */
-  init: function() {
-    var container = this.Dom.getContainer();
-    var wrapper = this.Dom.getWrapper();
+  init() {
+    const container = this.Dom.getContainer();
+    const wrapper = this.Dom.getWrapper();
 
     wrapper.setAttribute('aria-live', 'polite');
 
@@ -90,14 +90,12 @@ export default {
    * @memberOf Barba.Pjax
    * @private
    */
-  bindEvents: function() {
-    document.addEventListener('click',
-      this.onLinkClick.bind(this)
-    );
+  bindEvents() {
+    this.onLinkClick = this.onLinkClick.bind(this);
+    this.onStateChange = this.onStateChange.bind(this);
 
-    window.addEventListener('popstate',
-      this.onStateChange.bind(this)
-    );
+    document.addEventListener('click', this.onLinkClick);
+    window.addEventListener('popstate', this.onStateChange);
   },
 
   /**
@@ -106,7 +104,7 @@ export default {
    * @memberOf Barba.Pjax
    * @return {String} currentUrl
    */
-  getCurrentUrl: function() {
+  getCurrentUrl() {
     // TODO, clean from what? currenturl do not takes hash..
     return Utils.cleanLink(
       Utils.getCurrentUrl()
@@ -119,7 +117,7 @@ export default {
    * @memberOf Barba.Pjax
    * @param {String} newUrl
    */
-  goTo: function(url) {
+  goTo(url) {
     window.history.pushState(null, null, url);
     this.onStateChange();
   },
@@ -131,48 +129,42 @@ export default {
    * @param {String} url
    * @private
    */
-  forceGoTo: function(url) {
+  forceGoTo(url) {
     window.location = url;
   },
 
   /**
-   * Load an url, will start an xhr request or load from the cache
+   * Load an url, will start an ajax request or load from the cache
    *
    * @memberOf Barba.Pjax
    * @private
    * @param  {String} url
    * @return {Promise}
    */
-  load: function(url) {
-    var deferred = Utils.deferred();
-    var _this = this;
-    var xhr;
+  load(url) {
+    const deferred = Utils.deferred();
 
-    xhr = this.Cache.get(url);
+    let request = this.Cache.get(url);
 
-    if (!xhr) {
-      xhr = Utils.xhr(url);
-      this.Cache.set(url, xhr);
+    if (!request) {
+      request = Utils.request(url);
+      this.Cache.set(url, request);
     }
 
-    xhr.then(
-      function(data) {
-        var container = _this.Dom.parseResponse(data);
+    request.then(data => {
+      const container = this.Dom.parseResponse(data);
 
-        _this.Dom.putContainer(container);
+      this.Dom.putContainer(container);
 
-        if (!_this.cacheEnabled)
-          _this.Cache.reset();
+      if (!this.cacheEnabled)
+        this.Cache.reset();
 
-        deferred.resolve(container);
-      },
-      function() {
-        //Something went wrong (timeout, 404, 505...)
-        _this.forceGoTo(url);
-
-        deferred.reject();
-      }
-    );
+      deferred.resolve(container);
+    })
+    .catch(err => {
+      this.forceGoTo(url);
+      deferred.reject();
+    });
 
     return deferred.promise;
   },
@@ -186,7 +178,7 @@ export default {
    * @param  {HTMLElement} el
    * @return {String} href
    */
-  getHref: function(el) {
+  getHref(el) {
     if (!el) {
       return undefined;
     }
@@ -209,8 +201,8 @@ export default {
    * @private
    * @param {MouseEvent} evt
    */
-  onLinkClick: function(evt) {
-    var el = evt.target;
+  onLinkClick(evt) {
+    let el = evt.target;
 
     //Go up in the nodelist until we
     //find something with an href
@@ -224,7 +216,7 @@ export default {
 
       Dispatcher.trigger('linkClicked', el, evt);
 
-      var href = this.getHref(el);
+      const href = this.getHref(el);
       this.goTo(href);
     }
   },
@@ -237,11 +229,11 @@ export default {
    * @param  {HTMLElement} element
    * @return {Boolean}
    */
-  preventCheck: function(evt, element) {
+  preventCheck(evt, element) {
     if (!window.history.pushState)
       return false;
 
-    var href = this.getHref(element);
+    const href = this.getHref(element);
 
     //User
     if (!element || !href)
@@ -287,7 +279,7 @@ export default {
    * @memberOf Barba.Pjax
    * @return {Barba.Transition} Transition object
    */
-  getTransition: function() {
+  getTransition() {
     //User customizable
     return HideShowTransition;
   },
@@ -298,8 +290,8 @@ export default {
    * @memberOf Barba.Pjax
    * @private
    */
-  onStateChange: function() {
-    var newUrl = this.getCurrentUrl();
+  onStateChange() {
+    const newUrl = this.getCurrentUrl();
 
     if (this.transitionProgress)
       this.forceGoTo(newUrl);
@@ -309,8 +301,8 @@ export default {
 
     this.History.add(newUrl);
 
-    var newContainer = this.load(newUrl);
-    var transition = new (this.getTransition())();
+    const newContainer = this.load(newUrl);
+    const transition = new (this.getTransition())();
 
     this.transitionProgress = true;
 
@@ -319,7 +311,7 @@ export default {
       this.History.prevStatus()
     );
 
-    var transitionInstance = transition.init(
+    const transitionInstance = transition.init(
       this.Dom.getContainer(),
       newContainer
     );
@@ -340,8 +332,8 @@ export default {
    * @private
    * @param {HTMLElement} container
    */
-  onNewContainerLoaded: function(container) {
-    var currentStatus = this.History.currentStatus();
+  onNewContainerLoaded(container) {
+    const currentStatus = this.History.currentStatus();
     currentStatus.namespace = this.Dom.getNamespace(container);
 
     Dispatcher.trigger('newPageReady',
@@ -358,7 +350,7 @@ export default {
    * @memberOf Barba.Pjax
    * @private
    */
-  onTransitionEnd: function() {
+  onTransitionEnd() {
     this.transitionProgress = false;
 
     Dispatcher.trigger('transitionCompleted',

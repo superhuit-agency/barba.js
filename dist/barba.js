@@ -100,6 +100,7 @@ exports.default = {
    * @return {String} currentUrl
    */
   getCurrentUrl: function getCurrentUrl() {
+    // Todo add hash
     return window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search;
   },
 
@@ -118,32 +119,28 @@ exports.default = {
 
 
   /**
-   * Time in millisecond after the xhr request goes in timeout
+   * Time in millisecond after the ajax request goes in timeout
    *
    * @memberOf Barba.Utils
    * @type {Number}
    * @default
    */
-  xhrTimeout: 5000,
+  requestTimeout: 5000,
 
   /**
-   * Start an XMLHttpRequest() and return a Promise
+   * Start a fetch request
    *
    * @memberOf Barba.Utils
    * @param  {String} url
    * @return {Promise}
    */
-  xhr: function xhr(url) {
-    // const deferred = this.deferred();
-    // let timeout;
-
-    // new Promise((resolve, reject) => {
-    //   timeout = window.setTimeout(() => {
-    //     reject(new Error('xhr: Timeout exceeded'));
-    //   }, this.xhrTimeout);
-    // });
-
+  request: function request(url) {
+    // TODO implement timeout!
     var dfd = this.deferred();
+
+    var timeout = window.setTimeout(function () {
+      dfd.reject(new Error('timeout!'));
+    }, this.requestTimeout);
 
     var headers = new Headers();
     headers.append('x-barba', 'yes');
@@ -153,6 +150,8 @@ exports.default = {
       headers: headers,
       cache: 'default'
     }).then(function (res) {
+      window.clearTimeout(timeout);
+
       if (res.status >= 200 && res.status < 300) {
         return dfd.resolve(res.text());
       }
@@ -160,35 +159,11 @@ exports.default = {
       var err = new Error(res.statusText || res.status);
       return dfd.reject(err);
     }).catch(function (err) {
+      window.clearTimeout(timeout);
       dfd.reject(err);
     });
 
     return dfd.promise;
-
-    // var deferred = this.deferred();
-    // var req = new XMLHttpRequest();
-
-    // req.onreadystatechange = () => {
-    //   if (req.readyState === 4) {
-    //     // TODO CHECK THIS
-    //     if (req.status === 200) {
-    //       return deferred.resolve(req.responseText);
-    //     } else {
-    //       return deferred.reject(new Error('xhr: HTTP code is not 200'));
-    //     }
-    //   }
-    // };
-
-    // req.ontimeout = () => {
-    //   return deferred.reject(new Error('xhr: Timeout exceeded'));
-    // };
-
-    // req.open('GET', url);
-    // req.timeout = this.xhrTimeout;
-    // req.setRequestHeader('x-barba', 'yes');
-    // req.send();
-
-    // return deferred.promise;
   },
 
 
@@ -271,6 +246,15 @@ exports.default = {
     this.events[e] = this.events[e] || [];
     this.events[e].push(f);
   },
+
+
+  /**
+   * Bind a callback to an event that fires just once.
+   *
+   * @memberOf Barba.Dispatcher
+   * @param  {String} eventName
+   * @param  {Function} functio
+   */
   once: function once(e, f) {
     var self = this;
 
@@ -305,12 +289,17 @@ exports.default = {
    * @param  {...*} args
    */
   trigger: function trigger(e) {
-    //e, ...args
+    var _this = this;
+
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
     if (e in this.events === false) return;
 
-    for (var i = 0; i < this.events[e].length; i++) {
-      this.events[e][i].apply(this, Array.prototype.slice.call(arguments, 1));
-    }
+    this.events[e].forEach(function (event) {
+      event.apply(_this, args);
+    });
   }
 };
 
@@ -324,13 +313,6 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _utils = __webpack_require__(0);
-
-var _utils2 = _interopRequireDefault(_utils);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 /**
  * Simple static cache
  *
@@ -414,14 +396,12 @@ exports.default = {
    * @param {String} namespace
    * @private
    */
-  add: function add(url, namespace) {
-    if (!namespace) namespace = undefined;
+  add: function add(url) {
+    var namespace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 
-    this.history.push({
-      url: url,
-      namespace: namespace
-    });
+    this.history.push({ url: url, namespace: namespace });
   },
+
 
   /**
    * Return information about the current status
@@ -432,6 +412,7 @@ exports.default = {
   currentStatus: function currentStatus() {
     return this.history[this.history.length - 1];
   },
+
 
   /**
    * Return information about the previous status
@@ -533,6 +514,7 @@ exports.default = {
     this.init();
   },
 
+
   /**
    * Init the events
    *
@@ -555,6 +537,7 @@ exports.default = {
     this.bindEvents();
   },
 
+
   /**
    * Attach the eventlisteners
    *
@@ -562,10 +545,13 @@ exports.default = {
    * @private
    */
   bindEvents: function bindEvents() {
-    document.addEventListener('click', this.onLinkClick.bind(this));
+    this.onLinkClick = this.onLinkClick.bind(this);
+    this.onStateChange = this.onStateChange.bind(this);
 
-    window.addEventListener('popstate', this.onStateChange.bind(this));
+    document.addEventListener('click', this.onLinkClick);
+    window.addEventListener('popstate', this.onStateChange);
   },
+
 
   /**
    * Return the currentURL cleaned
@@ -578,6 +564,7 @@ exports.default = {
     return _utils2.default.cleanLink(_utils2.default.getCurrentUrl());
   },
 
+
   /**
    * Change the URL with pushstate and trigger the state change
    *
@@ -588,6 +575,7 @@ exports.default = {
     window.history.pushState(null, null, url);
     this.onStateChange();
   },
+
 
   /**
    * Force the browser to go to a certain url
@@ -600,8 +588,9 @@ exports.default = {
     window.location = url;
   },
 
+
   /**
-   * Load an url, will start an xhr request or load from the cache
+   * Load an url, will start an ajax request or load from the cache
    *
    * @memberOf Barba.Pjax
    * @private
@@ -609,18 +598,18 @@ exports.default = {
    * @return {Promise}
    */
   load: function load(url) {
-    var deferred = _utils2.default.deferred();
     var _this = this;
-    var xhr;
 
-    xhr = this.Cache.get(url);
+    var deferred = _utils2.default.deferred();
 
-    if (!xhr) {
-      xhr = _utils2.default.xhr(url);
-      this.Cache.set(url, xhr);
+    var request = this.Cache.get(url);
+
+    if (!request) {
+      request = _utils2.default.request(url);
+      this.Cache.set(url, request);
     }
 
-    xhr.then(function (data) {
+    request.then(function (data) {
       var container = _this.Dom.parseResponse(data);
 
       _this.Dom.putContainer(container);
@@ -628,15 +617,14 @@ exports.default = {
       if (!_this.cacheEnabled) _this.Cache.reset();
 
       deferred.resolve(container);
-    }, function () {
-      //Something went wrong (timeout, 404, 505...)
+    }).catch(function (err) {
       _this.forceGoTo(url);
-
       deferred.reject();
     });
 
     return deferred.promise;
   },
+
 
   /**
    * Get the .href parameter out of an element
@@ -662,6 +650,7 @@ exports.default = {
 
     return undefined;
   },
+
 
   /**
    * Callback called from click event
@@ -689,6 +678,7 @@ exports.default = {
       this.goTo(href);
     }
   },
+
 
   /**
    * Determine if the link should be followed
@@ -732,6 +722,7 @@ exports.default = {
     return true;
   },
 
+
   /**
    * Return a transition object
    *
@@ -742,6 +733,7 @@ exports.default = {
     //User customizable
     return _hideShowTransition2.default;
   },
+
 
   /**
    * Method called after a 'popstate' or from .goTo()
@@ -772,6 +764,7 @@ exports.default = {
     transitionInstance.then(this.onTransitionEnd.bind(this));
   },
 
+
   /**
    * Function called as soon the new container is ready
    *
@@ -785,6 +778,7 @@ exports.default = {
 
     _dispatcher2.default.trigger('newPageReady', this.History.currentStatus(), this.History.prevStatus(), container, this.Dom.currentHTML);
   },
+
 
   /**
    * Function called as soon the transition is finished
@@ -949,9 +943,12 @@ exports.default = {
       return false;
     }
 
-    document.body.addEventListener('mouseover', this.onLinkEnter.bind(this));
-    document.body.addEventListener('touchstart', this.onLinkEnter.bind(this));
+    this.onLinkEnter = this.onLinkEnter.bind(this);
+
+    document.body.addEventListener('mouseover', this.onLinkEnter);
+    document.body.addEventListener('touchstart', this.onLinkEnter);
   },
+
 
   /**
    * Callback for the mousehover/touchstart
@@ -973,10 +970,10 @@ exports.default = {
 
     var url = _pjax2.default.getHref(el);
 
-    //Check if the link is elegible for Pjax
+    // Check if the link is elegible for Pjax
     if (_pjax2.default.preventCheck(evt, el) && !_pjax2.default.Cache.get(url)) {
-      var xhr = _utils2.default.xhr(url);
-      _pjax2.default.Cache.set(url, xhr);
+      var request = _utils2.default.request(url);
+      _pjax2.default.Cache.set(url, request);
     }
   }
 };
@@ -1133,7 +1130,7 @@ exports.default = {
    * Full HTML String of the current page.
    * By default is the innerHTML of the initial loaded page.
    *
-   * Each time a new page is loaded, the value is the response of the xhr call.
+   * Each time a new page is loaded, the value is the response of the ajax call.
    *
    * @memberOf Barba.Pjax.Dom
    * @type {String}
@@ -1141,7 +1138,7 @@ exports.default = {
   currentHTML: document.documentElement.innerHTML,
 
   /**
-   * Parse the responseText obtained from the xhr call
+   * Parse the responseText obtained from the ajax call
    *
    * @memberOf Barba.Pjax.Dom
    * @private
@@ -1161,6 +1158,7 @@ exports.default = {
     return this.getContainer(wrapper);
   },
 
+
   /**
    * Get the main barba wrapper by the ID `wrapperId`
    *
@@ -1174,6 +1172,7 @@ exports.default = {
 
     return wrapper;
   },
+
 
   /**
    * Get the container on the current DOM,
@@ -1191,14 +1190,11 @@ exports.default = {
 
     var container = this.parseContainer(element);
 
-    // wtf?
-    // if (container && container.jquery)
-    //   container = container[0];
-
     if (!container) throw new Error('Barba.js: no container found');
 
     return container;
   },
+
 
   /**
    * Get the namespace of the container
@@ -1209,18 +1205,13 @@ exports.default = {
    * @return {String}
    */
   getNamespace: function getNamespace(element) {
-    // if (element && element.dataset) {
-    //   return element.dataset[this.dataNamespace];
-    // } else if (element) {
-    //   return element.getAttribute('data-' + this.dataNamespace);
-    // }
-
     if (!element) {
       return null;
     }
 
     return element.getAttribute('data-' + this.dataNamespace);
   },
+
 
   /**
    * Put the container on the page
@@ -1235,6 +1226,7 @@ exports.default = {
     var wrapper = this.getWrapper();
     wrapper.appendChild(element);
   },
+
 
   /**
    * Get container selector

@@ -1,5 +1,3 @@
-// var SauceLabs = require("saucelabs");
-
 module.exports = {
   'Basic test' : function (browser) {
     browser
@@ -10,14 +8,15 @@ module.exports = {
       .assert.title('Homepage')
       .assert.urlContains('index.html');
 
-    // browser
-    //   .click('a[href="about.html"]')
-    //   .pause(1000);
+    browser
+      .click('a[href="1.html"]')
+      .pause(1000);
 
-    // browser
-    //   .assert.title('about')
-    //   .assert.urlContains('about.html')
-    //   .assert.cssClassPresent('body', 'about');
+    browser
+      .assert.title('1')
+      .assert.urlContains('1.html');
+
+    browser.assert.cssClassPresent('.full', 'test-class');
 
     browser.end();
   },

@@ -1,5 +1,3 @@
-import Utils from '../utils/utils.js';
-
 /**
  * Simple static cache
  *

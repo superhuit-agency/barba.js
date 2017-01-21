@@ -6,33 +6,25 @@ export default class BaseView {
   }
 
   init() {
-    var _this = this;
+    Dispatcher.on('initStateChange', (newStatus, oldStatus) => {
+      if (oldStatus && oldStatus.namespace === this.namespace)
+        this.onLeave();
+    });
 
-    Dispatcher.on('initStateChange',
-      function(newStatus, oldStatus) {
-        if (oldStatus && oldStatus.namespace === _this.namespace)
-          _this.onLeave();
-      }
-    );
+    Dispatcher.on('newPageReady', (newStatus, oldStatus, container) => {
+      this.container = container;
 
-    Dispatcher.on('newPageReady',
-      function(newStatus, oldStatus, container) {
-        _this.container = container;
+      if (newStatus.namespace === this.namespace)
+        this.onEnter();
+    });
 
-        if (newStatus.namespace === _this.namespace)
-          _this.onEnter();
-      }
-    );
+    Dispatcher.on('transitionCompleted', (newStatus, oldStatus) => {
+      if (newStatus.namespace === this.namespace)
+        this.onEnterCompleted();
 
-    Dispatcher.on('transitionCompleted',
-      function(newStatus, oldStatus) {
-        if (newStatus.namespace === _this.namespace)
-          _this.onEnterCompleted();
-
-        if (oldStatus && oldStatus.namespace === _this.namespace)
-          _this.onLeaveCompleted();
-      }
-    );
+      if (oldStatus && oldStatus.namespace === this.namespace)
+        this.onLeaveCompleted();
+    });
   }
 
   /**
