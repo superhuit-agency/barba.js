@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 import BaseTransition from './transition/baseTransition';
 import BaseView from './view/baseView';
 import Cache from './cache/static';
