@@ -10,10 +10,10 @@ before_install:
  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
  - sudo dpkg -i google-chrome*.deb
 script:
- - npm run build
- - npm test
- - npm run coveralls
- - npm run e2e-sauce
+ - yarn run build
+ - yarn test
+ - yarn run coveralls
+ - yarn run e2e-sauce
 addons:
   sauce_connect: true
 notifications:

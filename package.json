@@ -10,8 +10,8 @@
   ],
   "main": "dist/barba.js",
   "scripts": {
-    "test": "npm run build && npm run unit && npm run e2e",
-    "e2e": "npm run http-server -s && ./node_modules/.bin/nightwatch -f '*.e2e.js'",
+    "test": "yarn run build && yarn run unit && yarn run e2e",
+    "e2e": "yarn run http-server -s && ./node_modules/.bin/nightwatch -f '*.e2e.js'",
     "e2e-sauce": "./node_modules/.bin/nightwatch -f '*.e2e.js' -c nightwatch.conf.sauce.js -e chrome_osx,ff_osx,safari_osx,ie_10,ie_11",
     "unit": "jest",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
@@ -21,8 +21,8 @@
     "js": "webpack",
     "filesize": "echo \"scale=2; $(gzip -c dist/barba.min.js | wc -c) / 1024\" | bc; echo \"kb\"",
     "minify": "./node_modules/uglify-js/bin/uglifyjs --screw-ie8 --mangle --compress -o ./dist/barba.min.js ./dist/barba.js",
-    "build": "npm run js && npm run minify",
-    "prepublish": "npm run build",
+    "build": "yarn run js && yarn run minify",
+    "prepublish": "yarn run build",
     "postinstall": "node nightwatch.conf.js"
   },
   "repository": {
@@ -35,11 +35,11 @@
   "author": "Luigi De Rosa <lurukee@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.21.0",
+    "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-preset-env": "^1.1.6",
     "coveralls": "^2.11.15",
-    "eslint": "^3.13.1",
+    "eslint": "^3.14.0",
     "eslint-loader": "^1.6.1",
     "fetch-mock": "^5.8.1",
     "http-server": "^0.9.0",
@@ -47,13 +47,11 @@
     "jest": "^18.1.0",
     "jsdoc": "^3.4.3",
     "nightwatch": "^0.9.12",
-    "promise-polyfill": "^6.0.2",
     "sauceconnect-runner": "^0.2.2",
     "saucelabs": "^1.3.0",
     "selenium-download": "^2.0.9",
     "uglify-js": "^2.7.5",
-    "webpack": "^2.2.0-rc.3",
-    "whatwg-fetch": "^2.0.2"
+    "webpack": "^2.2.0"
   },
   "jest": {
     "collectCoverage": true,
@@ -66,8 +64,7 @@
     }
   },
   "dependencies": {
-    "babel-core": "^6.22.1",
-    "eslint": "^3.14.0",
-    "webpack": "^2.2.0"
+    "promise-polyfill": "^6.0.2",
+    "whatwg-fetch": "^2.0.2"
   }
 }
