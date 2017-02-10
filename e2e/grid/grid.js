@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   function ExpandTransition() {
-    Barba.BaseTransition.call(this);
+    Barba.Transition.call(this);
 
     this.start = function() {
       this.originalThumb = lastElementClicked;
@@ -45,12 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  ExpandTransition.prototype = new Barba.BaseTransition();
+  ExpandTransition.prototype = new Barba.Transition();
   ExpandTransition.prototype.constructor = ExpandTransition;
 
 
   function ShrinkTransition() {
-    Barba.BaseTransition.call(this);
+    Barba.Transition.call(this);
 
     this.start = function() {
       this.newContainerLoading.then(this.shrinkImage.bind(this));
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
   };
 
-  ShrinkTransition.prototype = new Barba.BaseTransition();
+  ShrinkTransition.prototype = new Barba.Transition();
   ShrinkTransition.prototype.constructor = ShrinkTransition;
 
 

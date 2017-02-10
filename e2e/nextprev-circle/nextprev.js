@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
     TweenLite.to(el, 0.3, { webkitClipPath: 'circle(' + radius + 'px at ' + xCoord + '% 50%)' });
   };
 
-  var CoverMaskTransition = Barba.BaseTransition.extend({
+  var CoverMaskTransition = Barba.Transition.extend({
     start: function() {
       isAnimating = true;
 

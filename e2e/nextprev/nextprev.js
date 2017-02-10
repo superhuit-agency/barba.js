@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     lastElementClicked = el;
   });
 
-  var MovePage = Barba.BaseTransition.extend({
+  var MovePage = Barba.Transition.extend({
     start: function() {
       this.originalThumb = lastElementClicked;
 

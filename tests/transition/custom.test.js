@@ -1,7 +1,7 @@
 import Barba from '../../src/index';
 jest.useFakeTimers();
 
-class FadeTransition extends Barba.BaseTransition {
+class FadeTransition extends Barba.Transition {
   start() {
     Promise.all([
       this.fadeOut(),

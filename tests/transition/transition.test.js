@@ -16,7 +16,7 @@ const newContainerPromise = new Promise((resolve, reject) => {
   resolve(newContainer);
 });
 
-const baseInstance = new Barba.BaseTransition();
+const baseInstance = new Barba.Transition();
 
 it('has default members', () => {
   expect(baseInstance.oldContainer).toBeFalsy();

@@ -1,6 +1,6 @@
 import Barba from '../../src/index';
 
-const view = Barba.BaseView;
+const view = Barba.View;
 
 it('exists', () => {
   expect(typeof view).toBe('function');

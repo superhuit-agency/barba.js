@@ -1,10 +1,36 @@
 import Dispatcher from '../dispatcher/dispatcher';
 
-export default class BaseView {
+/**
+ * View to extend
+ *
+ * @class
+ * @memberOf Barba
+ */
+export default class View {
   constructor() {
+    /**
+     * Namespace of the current view
+     *
+     * @type {String}
+     * @member namespace
+     * @memberOf Barba.View
+     */
     this.namespace = null;
+
+    /**
+     * Container associated to this view
+     *
+     * @type {HTMLElement}
+     */
+    this.container = null;
   }
 
+  /**
+   * Register the view, binding the internal methods
+   * against the barba.js Events
+   *
+   * @member Barba.View#init
+   */
   init() {
     Dispatcher.on('initStateChange', (newStatus, oldStatus) => {
       if (oldStatus && oldStatus.namespace === this.namespace)
@@ -30,9 +56,6 @@ export default class BaseView {
   /**
    * This function will be fired when the container
    * is ready and attached to the DOM.
-   *
-   * @memberOf Barba.BaseView
-   * @abstract
    */
    onEnter() {}
 
@@ -40,7 +63,6 @@ export default class BaseView {
     * This function will be fired when the transition
     * to this container has just finished.
     *
-    * @memberOf Barba.BaseView
     * @abstract
     */
    onEnterCompleted() {}
@@ -49,7 +71,6 @@ export default class BaseView {
     * This function will be fired when the transition
     * to a new container has just started.
     *
-    * @memberOf Barba.BaseView
     * @abstract
     */
    onLeave() {}
@@ -58,7 +79,6 @@ export default class BaseView {
     * This function will be fired when the container
     * has just been removed from the DOM.
     *
-    * @memberOf Barba.BaseView
     * @abstract
     */
    onLeaveCompleted() {}

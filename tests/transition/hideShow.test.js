@@ -5,7 +5,7 @@ it('exists', () => {
   expect(typeof HideShowTransition).toBe('function');
 
   let instance = new HideShowTransition();
-  expect(instance instanceof Barba.BaseTransition).toBeTruthy();
+  expect(instance instanceof Barba.Transition).toBeTruthy();
   expect(typeof instance.start).toBe('function');
   expect(typeof instance.finish).toBe('function');
 });

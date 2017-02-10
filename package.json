@@ -21,7 +21,7 @@
     "js": "webpack",
     "filesize": "echo \"scale=2; $(gzip -c dist/barba.min.js | wc -c) / 1024\" | bc; echo \"kb\"",
     "minify": "./node_modules/uglify-js/bin/uglifyjs --screw-ie8 --mangle --compress -o ./dist/barba.min.js ./dist/barba.js",
-    "build": "yarn run js && yarn run minify",
+    "build": "yarn run js && yarn run minify && yarn run generatedoc",
     "prepublish": "yarn run build",
     "postinstall": "node nightwatch.conf.js"
   },

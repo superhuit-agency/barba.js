@@ -5,8 +5,8 @@ if (!window.Promise) {
   window.Promise = Promise;
 }
 
-import BaseTransition from './transition/baseTransition';
-import BaseView from './view/baseView';
+import Transition from './transition/transition';
+import View from './view/view';
 import Cache from './cache/static';
 import Dispatcher from './dispatcher/dispatcher';
 import HistoryManager from './pjax/historyManager';
@@ -17,8 +17,8 @@ import Utils from './utils/utils';
 
 module.exports = {
   version: VERSION,
-  BaseTransition,
-  BaseView,
+  Transition,
+  View,
   Cache,
   Dispatcher,
   HistoryManager,

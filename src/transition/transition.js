@@ -1,12 +1,12 @@
 import Utils from '../utils/utils';
 
 /**
- * BaseTransition to extend
+ * Transition to extend
  *
- * @namespace Barba.BaseTransition
+ * @namespace Barba.Transition
  * @type {Object}
  */
-export default class BaseTransition {
+export default class Transition {
   constructor() {
     this.oldContainer = undefined;
     this.newContainer = undefined;
@@ -17,7 +17,7 @@ export default class BaseTransition {
    * This function is called from Pjax module to initialize
    * the transition.
    *
-   * @memberOf Barba.BaseTransition
+   * @memberOf Barba.Transition
    * @private
    * @param  {HTMLElement} oldContainer
    * @param  {Promise} newContainer
@@ -44,7 +44,7 @@ export default class BaseTransition {
   /**
    * This function needs to be called as soon the Transition is finished
    *
-   * @memberOf Barba.BaseTransition
+   * @memberOf Barba.Transition
    */
   done() {
     this.oldContainer.parentNode.removeChild(this.oldContainer);
@@ -55,7 +55,7 @@ export default class BaseTransition {
   /**
    * Constructor for your Transition
    *
-   * @memberOf Barba.BaseTransition
+   * @memberOf Barba.Transition
    * @abstract
    */
   start() {

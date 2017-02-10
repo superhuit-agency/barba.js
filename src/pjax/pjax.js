@@ -46,6 +46,14 @@ export default {
   ignoreClassLink: 'no-barba',
 
   /**
+   * Latest HTMLElement clicked
+   *
+   * @memberOf Barba.Pjax
+   * @type {HTMLElement}
+   */
+  lastElementClicked: null,
+
+  /**
    * Function to be called to start Pjax
    *
    * @memberOf Barba.Pjax
@@ -79,6 +87,7 @@ export default {
       container,
       this.Dom.currentHTML
     );
+
     Dispatcher.trigger('transitionCompleted', this.History.currentStatus());
 
     this.bindEvents();
@@ -214,6 +223,9 @@ export default {
       evt.stopPropagation();
       evt.preventDefault();
 
+      this.lastElementClicked = el;
+      this.linkHash = el.hash.split('#')[1];
+
       Dispatcher.trigger('linkClicked', el, evt);
 
       const href = this.getHref(el);
@@ -256,8 +268,8 @@ export default {
       return false;
 
     //Ignore case when a hash is being tacked on the current URL
-    if (href.indexOf('#') > -1)
-      return false;
+    // if (href.indexOf('#') > -1)
+    //   return false;
 
     //Ignore case where there is download attribute
     if (element.getAttribute && typeof element.getAttribute('download') === 'string')
@@ -277,9 +289,11 @@ export default {
    * Return a transition object
    *
    * @memberOf Barba.Pjax
+   * @param  {prev} prev historyManager
+   * @param  {current} current historyManager
    * @return {Barba.Transition} Transition object
    */
-  getTransition() {
+  getTransition(prev, current) {
     //User customizable
     return HideShowTransition;
   },
@@ -302,7 +316,12 @@ export default {
     this.History.add(newUrl);
 
     const newContainer = this.load(newUrl);
-    const transition = new (this.getTransition())();
+    const transitionObj = this.getTransition(
+      this.History.prevStatus(),
+      this.History.currentStatus()
+    );
+
+    const transition = new (transitionObj)();
 
     this.transitionProgress = true;
 
@@ -352,6 +371,13 @@ export default {
    */
   onTransitionEnd() {
     this.transitionProgress = false;
+
+    if (this.linkHash) {
+      window.location.hash = '';
+      window.location.hash = this.linkHash;
+
+      this.linkHash = null;
+    }
 
     Dispatcher.trigger('transitionCompleted',
       this.History.currentStatus(),

@@ -8,7 +8,7 @@ document.body.innerHTML = `
   </div>
 `;
 
-class Home extends Barba.BaseView {
+class Home extends Barba.View {
   constructor() {
     super();
     this.namespace = 'home';
@@ -31,7 +31,7 @@ class Home extends Barba.BaseView {
   }
 }
 
-class Contact extends Barba.BaseView {
+class Contact extends Barba.View {
   constructor() {
     super();
     this.namespace = 'contact';
@@ -58,7 +58,7 @@ let i = new Home();
 
 it('exists', () => {
   expect(i instanceof Home).toBeTruthy();
-  expect(i instanceof Barba.BaseView).toBeTruthy();
+  expect(i instanceof Barba.View).toBeTruthy();
 });
 
 it('events', () => {

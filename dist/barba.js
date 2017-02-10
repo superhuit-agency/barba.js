@@ -506,6 +506,14 @@ exports.default = {
   ignoreClassLink: 'no-barba',
 
   /**
+   * Latest HTMLElement clicked
+   *
+   * @memberOf Barba.Pjax
+   * @type {HTMLElement}
+   */
+  lastElementClicked: null,
+
+  /**
    * Function to be called to start Pjax
    *
    * @memberOf Barba.Pjax
