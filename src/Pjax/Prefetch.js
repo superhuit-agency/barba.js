@@ -54,7 +54,13 @@ var Prefetch = {
 
     //Check if the link is elegible for Pjax
     if (Pjax.preventCheck(evt, el) && !Pjax.Cache.get(url)) {
-      var xhr = Utils.xhr(url);
+      var xhr = new Promise(function (resolve, reject) {
+        Utils.xhr(url)
+          .then(resolve)
+          .catch(function (err) {
+            console.log('Error in onLinkEnter:', err);
+          })
+      });
       Pjax.Cache.set(url, xhr);
     }
   }

@@ -55,13 +55,13 @@ var Utils = {
         if (req.status === 200) {
           return deferred.resolve(req.responseText);
         } else {
-          return deferred.reject(new Error('xhr: HTTP code is not 200'));
+          return deferred.reject('xhr: HTTP code is not 200');
         }
       }
     };
 
     req.ontimeout = function() {
-      return deferred.reject(new Error('xhr: Timeout exceeded'));
+      return deferred.reject('xhr: Timeout exceeded');
     };
 
     req.open('GET', url);

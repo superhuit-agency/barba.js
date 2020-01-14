@@ -172,6 +172,11 @@ var Pjax = {
         deferred.reject();
       }
     );
+    xhr.catch(
+      function (error) {
+        console.log('Pjax::load:', error);
+      }
+    )
 
     return deferred.promise;
   },
