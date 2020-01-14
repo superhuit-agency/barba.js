@@ -920,13 +920,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (req.status === 200) {
 	          return deferred.resolve(req.responseText);
 	        } else {
-	          return deferred.reject(new Error('xhr: HTTP code is not 200'));
+	          return deferred.reject('xhr: HTTP code is not 200');
 	        }
 	      }
 	    };
 	
 	    req.ontimeout = function() {
-	      return deferred.reject(new Error('xhr: Timeout exceeded'));
+	      return deferred.reject('xhr: Timeout exceeded');
 	    };
 	
 	    req.open('GET', url);
@@ -1493,6 +1493,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        deferred.reject();
 	      }
 	    );
+	    xhr.catch(
+	      function (error) {
+	        console.log('Pjax::load:', error);
+	      }
+	    )
 	
 	    return deferred.promise;
 	  },
@@ -1940,7 +1945,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    //Check if the link is elegible for Pjax
 	    if (Pjax.preventCheck(evt, el) && !Pjax.Cache.get(url)) {
-	      var xhr = Utils.xhr(url);
+	      var xhr = new Promise(function (resolve, reject) {
+	        Utils.xhr(url)
+	          .then(resolve)
+	          .catch(function (err) {
+	            console.log('Error in onLinkEnter:', err);
+	          })
+	      });
 	      Pjax.Cache.set(url, xhr);
 	    }
 	  }
